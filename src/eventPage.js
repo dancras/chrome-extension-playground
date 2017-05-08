@@ -28,3 +28,46 @@ chrome.browserAction.onClicked.addListener(function () {
 
     console.log('STARTED');
 });
+
+
+let facebookTabs = {};
+
+chrome.tabs.onCreated.addListener(function (tab) {
+
+    console.log('onCreated', tab);
+
+    if (!tab.url || !tab.url.includes('facebook.com')) {
+        return;
+    }
+
+    console.log('addingFacebookTab', tab.id);
+    facebookTabs[tab.id] = true;
+
+});
+
+chrome.tabs.onUpdated.addListener(function (tabId, info) {
+
+    console.log('onUpdated', info.url);
+
+    if (!info.url) {
+        return;
+    }
+
+    if (!info.url.includes('facebook.com') && facebookTabs[tabId]) {
+        console.log('removingFacebookTab', tabId);
+        delete facebookTabs[tabId];
+        return;
+    }
+
+    console.log('addingFacebookTab', tabId);
+    facebookTabs[tabId] = true;
+});
+
+chrome.tabs.onRemoved.addListener(function (tabId, info) {
+    console.log('onRemoved', tabId, info);
+
+    if (facebookTabs[tabId]) {
+        console.log('facebookTabClosed', tabId);
+        delete facebookTabs[tabId];
+    }
+});
