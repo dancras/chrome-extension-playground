@@ -14,16 +14,11 @@
         }
 
         if (!url.includes('facebook.com')) {
-
-            if (state.facebookTabs[tabId]) {
-                console.log('removingFacebookTab', tabId);
-                delete state.facebookTabs[tabId];
-            }
-
+            removeTabFromState(tabId);
             return;
         }
 
-        console.log('addingFacebookTab', tabId);
+        console.log('Adding tab to state', tabId);
         state.facebookTabs[tabId] = true;
 
         if (state.lastClosedTabTimestamp > Date.now() - TIMEOUT) {
@@ -37,9 +32,13 @@
     }
 
     function onTabRemoved(tabId) {
+        removeTabFromState(tabId);
+    }
+
+    function removeTabFromState(tabId) {
 
         if (state.facebookTabs[tabId]) {
-            console.log('facebookTabClosed', tabId);
+            console.log('Removing tab from state', tabId);
             delete state.facebookTabs[tabId];
 
             if (Object.keys(state.facebookTabs).length === 0) {
