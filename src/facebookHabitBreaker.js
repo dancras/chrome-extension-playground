@@ -7,6 +7,8 @@
         lastClosedTabTimestamp: 0
     };
 
+    initialiseState();
+
     function onTabCreatedOrUpdated(tabId, url) {
 
         if (!url) {
@@ -33,6 +35,22 @@
 
     function onTabRemoved(tabId) {
         removeTabFromState(tabId);
+    }
+
+    function initialiseState() {
+
+        chrome.tabs.query({
+            url: 'https://www.facebook.com/*'
+        }, function (tabs) {
+
+            tabs.forEach(function (tab) {
+                state.facebookTabs[tab.id] = true;
+            });
+
+            console.log('Initialised state', state);
+
+        });
+
     }
 
     function removeTabFromState(tabId) {
