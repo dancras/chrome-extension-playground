@@ -8,9 +8,13 @@ function onTabCreatedOrUpdated(tabId, url) {
         return;
     }
 
-    if (!url.includes('facebook.com') && state[tabId]) {
-        console.log('removingFacebookTab', tabId);
-        delete state[tabId];
+    if (!url.includes('facebook.com')) {
+
+        if (state[tabId]) {
+            console.log('removingFacebookTab', tabId);
+            delete state[tabId];
+        }
+
         return;
     }
 
