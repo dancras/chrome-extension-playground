@@ -1,33 +1,40 @@
-console.log('HABITS');
+(function () {
 
-let state = {};
+    let state = {};
 
-function onTabCreatedOrUpdated(tabId, url) {
+    function onTabCreatedOrUpdated(tabId, url) {
 
-    if (!url) {
-        return;
+        if (!url) {
+            return;
+        }
+
+        if (!url.includes('facebook.com')) {
+
+            if (state[tabId]) {
+                console.log('removingFacebookTab', tabId);
+                delete state[tabId];
+            }
+
+            return;
+        }
+
+        console.log('addingFacebookTab', tabId);
+        state[tabId] = true;
+
     }
 
-    if (!url.includes('facebook.com')) {
+    function onTabRemoved(tabId) {
 
         if (state[tabId]) {
-            console.log('removingFacebookTab', tabId);
+            console.log('facebookTabClosed', tabId);
             delete state[tabId];
         }
 
-        return;
     }
 
-    console.log('addingFacebookTab', tabId);
-    state[tabId] = true;
+    window.facebookHabitBreaker = {
+        onTabCreatedOrUpdated: onTabCreatedOrUpdated,
+        onTabRemoved: onTabRemoved
+    };
 
-}
-
-function onTabRemoved(tabId) {
-
-    if (state[tabId]) {
-        console.log('facebookTabClosed', tabId);
-        delete state[tabId];
-    }
-
-}
+}());
