@@ -1,3 +1,13 @@
+// Notes from experiments:
+//  - document.execCommand 'selectAll' and 'delete' could be useful
+//  - Messenger editor seems to track all events and manage own state
+//  - Faking events doesn't seem to work
+//  - Storing previous events and redispatching them does however
+
+// Next steps
+//  - Use the continuous speech to text mode
+//  - Don't send the message until approved with a "send" voice command
+
 const port = chrome.runtime.connect({
     name: 'messengerSpeechToTextPort'
 });
