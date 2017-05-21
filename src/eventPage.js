@@ -1,8 +1,22 @@
 console.log('LOADED');
 
-chrome.browserAction.onClicked.addListener(function () {
-    console.log('CLICKED');
-    speechRecognition.onClicked();
+chrome.runtime.onConnect.addListener(function(port) {
+
+    console.log('onConnect', port);
+
+    if (port.name === 'messengerSpeechToTextPort') {
+
+        const startSpeech = speechRecognition.initialise(function (message) {
+            port.postMessage(message);
+        });
+
+        chrome.browserAction.onClicked.addListener(function () {
+            console.log('CLICKED');
+            startSpeech();
+        });
+
+    }
+
 });
 
 chrome.tabs.onCreated.addListener(function (tab) {
