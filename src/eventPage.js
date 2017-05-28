@@ -6,13 +6,13 @@ chrome.runtime.onConnect.addListener(function(port) {
 
     if (port.name === 'messengerSpeechToTextPort') {
 
-        const startSpeech = speechRecognition.initialise(function (message) {
+        const toggleSpeech = speechRecognition.initialise(function (message) {
             port.postMessage(message);
         });
 
         chrome.browserAction.onClicked.addListener(function () {
             console.log('CLICKED');
-            startSpeech();
+            toggleSpeech();
         });
 
     }
