@@ -44,7 +44,7 @@
 
             const stopOnBreak = debounce(
                 recognition.stop.bind(recognition),
-                2000
+                750
             );
 
             return function () {

@@ -4,10 +4,6 @@
 //  - Faking events doesn't seem to work
 //  - Storing previous events and redispatching them does however
 
-// Next steps
-//  - Use the continuous speech to text mode
-//  - Don't send the message until approved with a "send" voice command
-
 const port = chrome.runtime.connect({
     name: 'messengerSpeechToTextPort'
 });
@@ -16,22 +12,28 @@ port.onMessage.addListener(function (msg) {
 
     console.log('msg received', msg);
 
-    const messageInputElement = findMessageInputElement();
+    if (msg === 'send') {
 
-    messageInputElement.focus();
-
-    requireSpaceEvent(messageInputElement).then((spaceEvent) => {
         window.setTimeout(() => {
-            messageInputElement.dispatchEvent(spaceEvent);
-            document.execCommand('insertText', false, msg);
-
-            window.setTimeout(() => {
-                const messageSendElement = findMessageSendElement();
-                console.log('clicking send', messageSendElement);
-                messageSendElement.click();
-            }, 0);
+            const messageSendElement = findMessageSendElement();
+            console.log('clicking send', messageSendElement);
+            messageSendElement.click();
         }, 0);
-    });
+
+    } else {
+
+        const messageInputElement = findMessageInputElement();
+
+        messageInputElement.focus();
+
+        requireSpaceEvent(messageInputElement).then((spaceEvent) => {
+            window.setTimeout(() => {
+                messageInputElement.dispatchEvent(spaceEvent);
+                document.execCommand('insertText', false, msg);
+            }, 0);
+        });
+
+    }
 
 });
 
